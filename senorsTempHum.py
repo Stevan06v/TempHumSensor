@@ -2,7 +2,9 @@ import time
 import board
 import adafruit_dht
 import psutil
+import io
 import json
+import os
 from datetime import date
 from datetime import datetime
 
@@ -18,9 +20,15 @@ hum_values = [10]
 counter = 0
 
 
-# craete json file
-with open("data.json", "w") as f:
-    print("The json file is created.")
+def startupCheck():
+    if os.path.isfile("data.json") and os.access("data.json", os.R_OK):
+        # checks if file exists
+        print("File exists and is readable")
+    else:
+        print("Either file is missing or is not readable, creating file...")
+        # craete json file
+        with open("data.json", "w") as f:
+            print("The json file is created.")
 
 
 def calc_avgValue(values):
@@ -29,6 +37,8 @@ def calc_avgValue(values):
         sum += iterator
     return sum / len(values)
 
+
+startupCheck()
 
 while True:
     try:
@@ -43,11 +53,11 @@ while True:
                     round(calc_avgValue(hum_values), 2),
                 )
             )
-            #get time
+            # get time
             today = date.today()
             now = datetime.now()
 
-            #init json object
+            # init json object
             data = {
                 "temperature": round(calc_avgValue(temp_values), 2),
                 "humidity": round(calc_avgValue(hum_values), 2),
@@ -57,7 +67,7 @@ while True:
                 "fullDate4": today.strftime("%b-%d-%Y"),
                 "date_time": now.strftime("%d/%m/%Y %H:%M:%S"),
             }
-            json_object = json.dumps(data, indent=4)
+            json_object = json.dumps(data, indent = 4)
 
             with open("data.json", "w") as outfile:
                 outfile.write(json_object)
