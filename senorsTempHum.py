@@ -26,7 +26,7 @@ def startupCheck():
         print("File exists and is readable")
     else:
         print("Either file is missing or is not readable, creating file...")
-        # craete json file
+        # create json file
         with open("data.json", "w") as f:
             print("The json file is created.")
 
@@ -39,6 +39,7 @@ def calc_avgValue(values):
 
 
 startupCheck()
+
 
 while True:
     try:
@@ -67,6 +68,8 @@ while True:
                 "fullDate4": today.strftime("%b-%d-%Y"),
                 "date_time": now.strftime("%d/%m/%Y %H:%M:%S"),
             }
+            
+
             json_object = json.dumps(data, indent = 4)
 
             with open("data.json", "w") as outfile:
