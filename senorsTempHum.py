@@ -22,6 +22,17 @@ counter = 0
 
 dataLED = LED(13)
 
+#define json obj
+data = {
+        "temperature": 0,
+        "humidity": 0,
+        "fullDate": "",
+        "fullDate2": "",
+        "fullDate3": "",
+        "fullDate4": "",
+        "date_time": ""
+    }
+
 
 def startupCheck():
     if os.path.isfile("data.json") and os.access("data.json", os.R_OK):
@@ -68,25 +79,22 @@ while True:
             now = datetime.now()
 
             # init json object
-            data = {
-                "temperature": round(calc_avgValue(temp_values), 2),
-                "humidity": round(calc_avgValue(hum_values), 2),
-                "fullDate": today,
-                "fullDate2": today.strftime("%d/%m/%Y"),
-                "fullDate3": today.strftime("%B %d, %Y"),
-                "fullDate4": today.strftime("%b-%d-%Y"),
-                "date_time": now.strftime("%d/%m/%Y %H:%M:%S"),
-            }
+            data["temperature"] = round(calc_avgValue(temp_values), 2)
+            data["humidity"] = round(calc_avgValue(hum_values), 2)
+            data["fullDate"] = today
+            data["fullDate2"] = today.strftime("%d/%m/%Y")
+            data["fullDate3"] = today.strftime("%B %d, %Y")
+            data["fullDate4"] = today.strftime("%b-%d-%Y")
+            data["date_time"] = now.strftime("%d/%m/%Y %H:%M:%S")
+
+
             #if data is written signal appears
             onOFF()
-            print("Led running...")
-
-            # Serializing json
-            #json_object = json.dumps(data, indent=4)
+            print("Data has been written to data.json...")
 
             # Writing to sample.json
-            with open("data.json", "w") as outfile:
-                json.dump(data, outfile)
+            with open("data.json", "w") as f:
+                json.dump(data, f)
 
             counter = 0
     except RuntimeError as error:
