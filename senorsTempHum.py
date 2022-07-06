@@ -43,11 +43,7 @@ def calc_avgValue(values):
 
 def onOFF():
     dataLED.on()
-    time.sleep(0.5)
-    dataLED.off()
-    time.sleep(0.5)
-    dataLED.on()
-    time.sleep(0.5)
+    time.sleep(0.7)
     dataLED.off()
 
 
@@ -83,13 +79,14 @@ while True:
             }
             #if data is written signal appears
             onOFF()
+            print("Led running...")
 
             # Serializing json
-            json_object = json.dumps(data, indent=4)
+            #json_object = json.dumps(data, indent=4)
 
             # Writing to sample.json
-            with open("sample.json", "w") as outfile:
-                outfile.write(json_object)
+            #with open("sample.json", "w") as outfile:
+                #outfile.write(json_object)
 
             counter = 0
     except RuntimeError as error:
@@ -99,3 +96,4 @@ while True:
         sensor.exit()
         raise error
     time.sleep(0.2)
+
