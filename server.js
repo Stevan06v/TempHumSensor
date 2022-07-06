@@ -3,7 +3,7 @@ const fs = require("fs")
 const { get } = require("http")
 const app = express()
 const PORT = 3000
-const jsonpath = "./src/data.json"
+const jsonpath = ".\src\roomStats.json"
 
 
 app.use(express.static('public'))
@@ -29,11 +29,10 @@ class Data {
 
 const DataObj = new Data()
 
+//save data
 if (fs.existsSync(jsonpath)) {
-
 	fs.readFile(jsonpath, (err, data_string) => {
 		if (err) throw err;
-
 		var get_data = JSON.parse(data_string)
 		for (let i = 0; i < get_data.list.length-1; i++) {
 			DataObj.add(get_data.list[i].temp,
