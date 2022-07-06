@@ -66,7 +66,7 @@ while True:
                 "fullDate2": today.strftime("%d/%m/%Y"),
                 "fullDate3": today.strftime("%B %d, %Y"),
                 "fullDate4": today.strftime("%b-%d-%Y"),
-                "date_time": now.strftime("%d/%m/%Y %H:%M:%S"),
+                "date_time": now.strftime("%d/%m/%Y %H:%M:%S")
             }
 
             # Serializing json
