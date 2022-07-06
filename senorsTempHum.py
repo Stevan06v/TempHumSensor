@@ -5,6 +5,7 @@ import psutil
 import io
 import json
 import os
+from gpiozero import LED
 from datetime import date
 from datetime import datetime
 
@@ -18,6 +19,8 @@ sensor = adafruit_dht.DHT11(board.D23)
 temp_values = [10]
 hum_values = [10]
 counter = 0
+
+dataLED = LED(13)
 
 
 def startupCheck():
@@ -36,6 +39,16 @@ def calc_avgValue(values):
     for iterator in values:
         sum += iterator
     return sum / len(values)
+
+
+def onOFF():
+    dataLED.on()
+    time.sleep(0.5)
+    dataLED.off()
+    time.sleep(0.5)
+    dataLED.on()
+    time.sleep(0.5)
+    dataLED.off()
 
 
 startupCheck()
@@ -68,6 +81,8 @@ while True:
                 "fullDate4": today.strftime("%b-%d-%Y"),
                 "date_time": now.strftime("%d/%m/%Y %H:%M:%S"),
             }
+            #if data is written signal appears
+            onOFF()
 
             # Serializing json
             json_object = json.dumps(data, indent=4)
@@ -80,6 +95,7 @@ while True:
     except RuntimeError as error:
         continue
     except Exception as error:
+        
         sensor.exit()
         raise error
     time.sleep(0.2)
