@@ -68,12 +68,18 @@ while True:
                 "fullDate4": today.strftime("%b-%d-%Y"),
                 "date_time": now.strftime("%d/%m/%Y %H:%M:%S"),
             }
-            
 
-            #json_object = json.dumps(data, indent = 4)
+            # Serializing json
+            json_object = json.dumps(data, indent=4)
 
-           # with open("data.json", "w") as outfile:
-                #outfile.write(json_object)
+            # Writing to sample.json
+            with open("sample.json", "w") as outfile:
+                outfile.write(json_object)
+
+            # json_object = json.dumps(data, indent = 4)
+
+            # with open("data.json", "w") as outfile:
+            # outfile.write(json_object)
 
             counter = 0
     except RuntimeError as error:
