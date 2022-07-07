@@ -21,8 +21,14 @@ hum_values = [10]
 counter = 0
 dataLED = LED(13)
 
-
-
+def errSignal():
+    for i in range(0,3)
+        dataLED.on()
+        time.sleep(0.1)
+        dataLED.off()
+        time.sleep(0.1)
+        
+#on startup
 def runSignal():
     for i in range(0,5):
         dataLED.on()
@@ -99,9 +105,10 @@ while True:
 
             counter = 0
     except RuntimeError as error:
+        errSignal()
         continue
     except Exception as error:
-
+        errSignal()
         sensor.exit()
         raise error
     time.sleep(0.2)
