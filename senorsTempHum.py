@@ -20,7 +20,7 @@ temp_values = [10]
 hum_values = [10]
 counter = 0
 
-dataLED = LED(1)
+dataLED = LED(13)
 
 
 def startupCheck():
