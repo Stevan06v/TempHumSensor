@@ -22,7 +22,7 @@ counter = 0
 dataLED = LED(13)
 
 def errSignal():
-    for i in range(0,3)
+    for i in range(0,3):
         dataLED.on()
         time.sleep(0.1)
         dataLED.off()
