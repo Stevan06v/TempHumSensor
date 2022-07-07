@@ -94,22 +94,22 @@ while True:
                 "date_time": str(now.strftime("%d/%m/%Y %H:%M:%S"))
             }
 
-            # if data is written signal appears
-            onOFF()
-            
-            print("Data has been written to data.json...")
-
             # Writing to sample.json
             with open("data.json", "w") as f:
                 json.dump(data, f)
 
+            # if data is written signal appears
+            onOFF()
+            
+            print("Data has been written to data.json...")
+            
             counter = 0
+            
     except RuntimeError as error:
-        errSignal()
         continue
     except Exception as error:
-        errSignal()
         sensor.exit()
+        while True:
+            errSignal()
         raise error
     time.sleep(0.2)
-
