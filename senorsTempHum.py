@@ -5,6 +5,7 @@ import psutil
 import io
 import json
 import os
+from gpiozero import LED
 from datetime import date
 from datetime import datetime
 
@@ -18,6 +19,8 @@ sensor = adafruit_dht.DHT11(board.D23)
 temp_values = [10]
 hum_values = [10]
 counter = 0
+
+dataLED = LED(1)
 
 
 def startupCheck():
@@ -36,6 +39,12 @@ def calc_avgValue(values):
     for iterator in values:
         sum += iterator
     return sum / len(values)
+
+
+def onOFF():
+    dataLED.on()
+    time.sleep(0.7)
+    dataLED.off()
 
 
 startupCheck()
@@ -58,28 +67,30 @@ while True:
             today = date.today()
             now = datetime.now()
 
-            # init json object
+            # define json obj
             data = {
                 "temperature": round(calc_avgValue(temp_values), 2),
                 "humidity": round(calc_avgValue(hum_values), 2),
-                "fullDate": today,
-                "fullDate2": today.strftime("%d/%m/%Y"),
-                "fullDate3": today.strftime("%B %d, %Y"),
-                "fullDate4": today.strftime("%b-%d-%Y"),
-                "date_time": now.strftime("%d/%m/%Y %H:%M:%S")
+                "fullDate": str(today),
+                "fullDate2": str(today.strftime("%d/%m/%Y")),
+                "fullDate3": str(today.strftime("%B %d, %Y")),
+                "fullDate4": str(today.strftime("%b-%d-%Y")),
+                "date_time": str(now.strftime("%d/%m/%Y %H:%M:%S"))
             }
 
-            # Serializing json
-            json_object = json.dumps(data, indent=4)
+            # if data is written signal appears
+            onOFF()
+            print("Data has been written to data.json...")
 
             # Writing to sample.json
-            with open("sample.json", "w") as outfile:
-                outfile.write(json_object)
+            with open("data.json", "w") as f:
+                json.dump(data, f)
 
             counter = 0
     except RuntimeError as error:
         continue
     except Exception as error:
+
         sensor.exit()
         raise error
     time.sleep(0.2)
