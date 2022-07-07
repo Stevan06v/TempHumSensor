@@ -19,9 +19,16 @@ sensor = adafruit_dht.DHT11(board.D23)
 temp_values = [10]
 hum_values = [10]
 counter = 0
-
 dataLED = LED(13)
 
+
+
+def runSignal():
+    for i in range(0,5):
+        dataLED.on()
+        time.sleep(0.2)
+        dataLED.off()
+        time.sleep(0.2)
 
 def startupCheck():
     if os.path.isfile("data.json") and os.access("data.json", os.R_OK):
@@ -31,9 +38,8 @@ def startupCheck():
         print("Either file is missing or is not readable, creating file...")
         # create json file
         with open("data.json", "w") as f:
-            print("The json file is created.")
-
-
+            print("The json file is created.")#
+    
 def calc_avgValue(values):
     sum = 0
     for iterator in values:
@@ -46,7 +52,10 @@ def onOFF():
     time.sleep(0.7)
     dataLED.off()
 
+# data led blinking on startup
+runSignal()
 
+# checks if file exists 
 startupCheck()
 
 
@@ -67,6 +76,7 @@ while True:
             today = date.today()
             now = datetime.now()
 
+            
             # define json obj
             data = {
                 "temperature": round(calc_avgValue(temp_values), 2),
@@ -80,6 +90,7 @@ while True:
 
             # if data is written signal appears
             onOFF()
+            
             print("Data has been written to data.json...")
 
             # Writing to sample.json
@@ -94,3 +105,4 @@ while True:
         sensor.exit()
         raise error
     time.sleep(0.2)
+
