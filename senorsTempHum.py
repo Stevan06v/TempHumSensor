@@ -20,6 +20,7 @@ temp_values = [10]
 hum_values = [10]
 counter = 0
 dataLED = LED(13)
+dataList = []
 
 def errSignal():
     for i in range(0,3):
@@ -36,22 +37,28 @@ def runSignal():
         dataLED.off()
         time.sleep(0.2)
 
+def getExistingData():
+    with open('/home/pi/TempHumSensorScript-/src/data.json') as fp:
+        dataList = json.load(fp)
+    print(dataList)
+
 def startupCheck():
-    if os.path.isfile("data.json") and os.access("data.json", os.R_OK):
+    if os.path.isfile("/home/pi/TempHumSensorScript-/src/data.json") and os.access("/home/pi/TempHumSensorScript-/src/data.json", os.R_OK):
         # checks if file exists
-        print("File exists and is readable")
+        print("File exists and is readable.")
+        # get json data  an push into arr on startup
+        getExistingData()
     else:
         print("Either file is missing or is not readable, creating file...")
         # create json file
         with open("data.json", "w") as f:
-            print("The json file is created.")#
-    
+            print("The json file is created.")
+   
 def calc_avgValue(values):
     sum = 0
     for iterator in values:
         sum += iterator
     return sum / len(values)
-
 
 def onOFF():
     dataLED.on()
@@ -64,7 +71,6 @@ runSignal()
 # checks if file exists 
 startupCheck()
 
-
 while True:
     try:
         temp_values.insert(counter, sensor.temperature)
@@ -75,15 +81,14 @@ while True:
             print(
                 "Temperature: {}*C   Humidity: {}% ".format(
                     round(calc_avgValue(temp_values), 2),
-                    round(calc_avgValue(hum_values), 2),
+                    round(calc_avgValue(hum_values), 2)
                 )
             )
             # get time
             today = date.today()
             now = datetime.now()
-
             
-            # define json obj
+            # create json obj
             data = {
                 "temperature": round(calc_avgValue(temp_values), 2),
                 "humidity": round(calc_avgValue(hum_values), 2),
@@ -93,10 +98,13 @@ while True:
                 "fullDate4": str(today.strftime("%b-%d-%Y")),
                 "date_time": str(now.strftime("%d/%m/%Y %H:%M:%S"))
             }
-
-            # Writing to sample.json
-            with open("data.json", "w") as f:
-                json.dump(data, f)
+          
+            # push data into list
+            dataList.append(data)
+            
+            # writing to data.json
+            with open("/home/pi/TempHumSensorScript-/src/data.json", "w") as f:
+                json.dump(dataList, f, indent=4, separators=(',',': '))
 
             # if data is written signal appears
             onOFF()
